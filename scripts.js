@@ -2,13 +2,22 @@ const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
 const gridSize = 20;
-canvas.width = 400;
+canvas.width = 600;
 canvas.height = 400;
 
 let snake = [{ x: 200, y: 200 }];
 let direction = { x: 0, y: 0 };
 let egg = getRandomPosition();
 let gameOver = false;
+let score = 0;
+let highestScore = localStorage.getItem('highestScore') || 0;
+
+const currentScoreElement = document.getElementById('currentScore');
+const highestScoreElement = document.getElementById('highestScore');
+const celebrationElement = document.getElementById('celebration');
+const gameOverMessageElement = document.getElementById('gameOverMessage');
+
+highestScoreElement.innerText = highestScore;
 
 function getRandomPosition() {
     return {
@@ -22,11 +31,19 @@ function drawRect(x, y, color) {
     ctx.fillRect(x, y, gridSize, gridSize);
 }
 
+function drawScore() {
+    ctx.fillStyle = 'white';
+    ctx.font = '20px Arial';
+    ctx.fillText(`Score: ${score}`, 10, 30);
+}
+
 function update() {
     if (gameOver) {
         ctx.fillStyle = 'red';
         ctx.font = '50px Arial';
         ctx.fillText('Game Over', canvas.width / 4, canvas.height / 2);
+        gameOverMessageElement.style.display = 'block';
+        gameOverMessageElement.innerText="GAME OVER"
         return;
     }
 
@@ -36,6 +53,14 @@ function update() {
 
     if (head.x === egg.x && head.y === egg.y) {
         egg = getRandomPosition();
+        score += 4;
+        currentScoreElement.innerText = score;
+        celebrationElement.innerText = "🎉 Your score is " + score + "! 🎉";
+        if (score > highestScore) {
+            highestScore = score;
+            highestScoreElement.innerText = highestScore;
+            localStorage.setItem('highestScore', highestScore);
+        }
     } else {
         snake.pop();
     }
@@ -50,6 +75,8 @@ function update() {
     drawRect(egg.x, egg.y, 'yellow');
 
     snake.forEach(segment => drawRect(segment.x, segment.y, 'lime'));
+
+    drawScore();
 
     setTimeout(update, 100);
 }

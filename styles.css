@@ -7,7 +7,31 @@ body {
     margin: 0;
 }
 
-canvas {
+Canvas {
     background-color: #000;
     display: block;
+}
+#scoreBoard {
+    font-size: 20px;
+    margin-top: 30px;
+}
+.celebration {
+    font-size: 24px;
+    color: green;
+    animation: jump 1s infinite;
+}
+@keyframes jump {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+#gameOverMessage {
+    display: none;
+    font-size: 30px;
+    color: red;
+    text-align: center;
+    margin-top: 20px;
 }
